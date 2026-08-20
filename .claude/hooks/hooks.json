@@ -1,0 +1,101 @@
+{
+  "description": "Learning hooks + automated quality guards. Each hook teaches by catching mistakes and explaining why.",
+  "hooks": {
+    "PostToolUse": [
+      {
+        "hooks": [
+          {
+            "type": "prompt",
+            "prompt": "A file was just created or modified. Since this is a learning environment for beginners:\n\n1. BRIEFLY explain what you just did in plain English (1-2 sentences)\n2. If relevant, mention what this file is FOR\n3. If there's a logical next step, suggest it\n\nKeep it short and encouraging. Don't be verbose."
+          }
+        ],
+        "matcher": "Write|Edit"
+      },
+      {
+        "hooks": [
+          {
+            "type": "prompt",
+            "prompt": "A command was just run in the terminal. Since this is a learning environment:\n\n1. If the command succeeded, briefly celebrate and explain what happened\n2. If there were errors, explain what went wrong in simple terms and how to fix it\n3. If this was a build/dev server command, remind them what to do next (e.g., 'open localhost:3000')\n\nBe encouraging, not technical. Beginners get scared by terminal output."
+          }
+        ],
+        "matcher": "Bash"
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": ".claude/hooks/check-security.sh"
+          }
+        ],
+        "matcher": "\\.ts$|\\.tsx$"
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": ".claude/hooks/check-react-antipatterns.sh"
+          }
+        ],
+        "matcher": "\\.tsx$|\\.ts$"
+      },
+      {
+        "hooks": [
+          {
+            "type": "prompt",
+            "prompt": "🎨 DESIGN TASTE GUARDIAN — AI aesthetic detection.\n\nScan the Tailwind classes you just wrote for patterns that scream 'AI-generated':\n\n**Colors to flag:**\n- `from-purple-600 to-blue-600` or similar purple-blue gradients (AI default #1)\n- `#8B5CF6` or violet-500/purple-500 as primary accent\n- Neon glows: `shadow-purple-500/50`, `shadow-blue-500/50`\n- Mesh gradient backgrounds\n\n**Layouts to flag:**\n- Everything centered with no asymmetry\n- Generic 3-column equal grids for features\n- Card pattern: icon + title + description (template-tier)\n\n**Decorations to flag:**\n- `backdrop-blur` on everything (glassmorphism overuse)\n- Gradient orbs/blobs as decorations\n- Particle effects or floating elements\n\n**Animations to flag:**\n- Everything bouncing/floating on load\n- Typewriter text effects\n- Parallax on every section\n\nIf you find AI aesthetic patterns:\n- Use 🎨 prefix\n- Show the specific class/pattern\n- Explain WHY it looks AI-generated\n- Suggest a professional alternative:\n  - Purple gradient → Solid color or monochrome\n  - Glassmorphism → Subtle shadows + solid backgrounds\n  - Centered everything → Asymmetric 60/40 layouts\n  - 3-column grid → Bento grid with varied sizes\n\nIf the design looks intentional and premium, say: ✅ Design looks professional — no AI aesthetic detected.\n\nBe helpful, not judgmental. The goal is premium, not generic."
+          }
+        ],
+        "matcher": "className|class=|tailwind\\.config"
+      },
+      {
+        "hooks": [
+          {
+            "type": "prompt",
+            "prompt": "💾 SAVE POINT CHECK — Version control prompt.\n\nAfter 3+ file changes in this session, offer to save their progress:\n\n> \"💾 **Save point?** You've made several changes. Want me to create a checkpoint?\"\n>\n> Reply **yes** and I'll save everything right now!\n> Reply **no** to keep working without saving.\n\n**If user says YES (or any affirmative like 'sure', 'ok', 'do it', 'yeah'):**\n1. Run `git add -A`\n2. Run `git status` to see what's being saved\n3. Create a commit with a clear message describing the changes\n4. Tell them: \"✅ Checkpoint created! You can always go back to this point with `/revert`\"\n\n**If user says NO or ignores:**\n- Don't mention again until at least 5 more file operations\n- Just say \"No problem! Keep building 🚀\"\n\n**Rules:**\n- Only suggest this ONCE per ~5 file operations (don't be annoying)\n- Frame it as a VIDEO GAME save point — not technical git jargon\n- When they confirm, ACTUALLY DO THE COMMIT — don't just explain how\n- Keep the commit message simple and human-readable"
+          }
+        ],
+        "matcher": "Write|Edit"
+      },
+      {
+        "hooks": [
+          {
+            "type": "prompt",
+            "prompt": "✍️ TONE CHECKER — AI language guard for social content.\n\nThis file is in output/social/ — it's content meant for real platforms. Check it for AI-sounding language before it goes anywhere.\n\n**Block or flag if you find:**\n\n1. **Corporate jargon:**\n   - leverage, synergy, facilitate, utilize, streamline, optimize (as a verb)\n   - ecosystem, landscape, paradigm, framework (used loosely)\n   - actionable, impactful, scalable, robust\n\n2. **AI-sounding openers:**\n   - \"I'd be happy to...\"\n   - \"I hope this finds you well\"\n   - \"In today's fast-paced world...\"\n   - \"It's important to note that...\"\n   - \"Excited to share...\"\n   - \"Delighted to announce...\"\n   - \"Let me know if you have any questions\"\n\n3. **Filler phrases:**\n   - \"At the end of the day\"\n   - \"It goes without saying\"\n   - \"Needless to say\"\n   - \"As per my previous\"\n   - \"Circle back\", \"touch base\", \"move the needle\"\n\n4. **Wrong length for platform:**\n   - Twitter/X: over 280 characters — flag as too long\n   - LinkedIn: over 3000 characters — warn\n   - Instagram: over 2200 characters — warn\n   - WhatsApp: over 4096 characters — warn\n\nIf issues found:\n- Use 🗣️ TONE: prefix\n- Show the exact phrase or sentence\n- Suggest a more human alternative\n- Don't rewrite the whole post — just flag the specific problem\n\nIf the content sounds natural and human, say: ✅ Sounds like a real person. Good to send."
+          }
+        ],
+        "matcher": "output/social/"
+      }
+    ],
+    "PreToolUse": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": ".claude/hooks/check-file-size-guard.sh"
+          }
+        ],
+        "matcher": "Edit|Write"
+      },
+      {
+        "hooks": [
+          {
+            "type": "prompt",
+            "prompt": "🚨 PRE-COMMIT SECURITY SCAN — BLOCKING CHECK\n\nBefore this commit goes through, scan ALL staged files for secrets:\n\n**BLOCK THE COMMIT if you find:**\n\n1. **API Keys & Tokens:**\n   - `sk_live_`, `sk_test_` (Stripe)\n   - `pk_live_`, `pk_test_` (Stripe publishable)\n   - `AKIA` followed by 16 chars (AWS)\n   - `ghp_`, `gho_`, `ghu_` (GitHub tokens)\n   - `xoxb-`, `xoxp-` (Slack tokens)\n   - `ya29.` (Google OAuth)\n   - Any string matching: `api[_-]?key`, `apikey`, `api_secret`\n\n2. **Passwords & Secrets:**\n   - `password\\s*=\\s*['\"][^'\"]+['\"]` (hardcoded passwords)\n   - `secret\\s*=\\s*['\"][^'\"]+['\"]` (hardcoded secrets)\n   - `-----BEGIN (RSA |EC |OPENSSH )?PRIVATE KEY-----`\n   - `-----BEGIN CERTIFICATE-----`\n\n3. **Connection Strings:**\n   - `mongodb(\\+srv)?://[^\\s]+:[^\\s]+@`\n   - `postgres(ql)?://[^\\s]+:[^\\s]+@`\n   - `mysql://[^\\s]+:[^\\s]+@`\n   - `redis://[^\\s]+:[^\\s]+@`\n\n4. **Webhook Secrets:**\n   - `whsec_` (Stripe webhooks)\n   - `webhook[_-]?secret`\n\n5. **.env files being committed:**\n   - If ANY .env file (except .env.example) is staged, BLOCK!\n\n**If secrets found:**\n```\n🔴 COMMIT BLOCKED — Secrets detected!\n\nFile: [filename]\nLine: [line number]\nFound: [redacted pattern]\n\nTo fix:\n1. Move this to .env.local (add to .gitignore)\n2. Use process.env.YOUR_VAR instead\n3. Run: git reset HEAD [filename]\n\nNever commit secrets. They live forever in git history!\n```\n\n**If clean:**\n```\n✅ Security scan passed — no secrets detected. Safe to commit!\n```\n\nThis check is MANDATORY. Do not skip it."
+          }
+        ],
+        "matcher": "git commit|git add"
+      }
+    ],
+    "Notification": [
+      {
+        "hooks": [
+          {
+            "type": "prompt",
+            "prompt": "The dev server is now running! Remind the user:\n- Open http://localhost:3000 in their browser\n- Changes will appear automatically (hot reload)\n- Press Ctrl+C in terminal to stop the server when done"
+          }
+        ],
+        "matcher": "npm run dev|next dev"
+      }
+    ]
+  }
+}

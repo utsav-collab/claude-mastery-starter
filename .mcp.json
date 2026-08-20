@@ -1,0 +1,38 @@
+{
+  "$schema": "https://raw.githubusercontent.com/anthropics/claude-code/main/.mcp.schema.json",
+  "_comment": "Pre-configured tools. Context7 and Notion work immediately via OAuth. Add tokens for GitHub and Beeper when you're ready.",
+  "mcpServers": {
+    "context7": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["-y", "@upstash/context7-mcp@latest"],
+      "_setup": "Zero config — works immediately. Gives Claude live documentation for any library."
+    },
+    "notion": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["-y", "@notionhq/notion-mcp-server"],
+      "_setup": "Approves via OAuth on first use — just click Approve in the browser. Lets Claude read and write your Notion workspace."
+    },
+    "github": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-github"],
+      "env": {
+        "GITHUB_PERSONAL_ACCESS_TOKEN": "<paste-your-token-here>"
+      },
+      "_setup": "Get a token at github.com/settings/tokens (classic, repo scope). Lets Claude create issues, read PRs, manage your repo."
+    },
+    "beeper": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["-y", "beeper-mcp@latest"],
+      "env": {
+        "BEEPER_TOKEN": "<paste-your-token-here>"
+      },
+      "_setup": "Account at beeper.com. Connect WhatsApp/LinkedIn/Instagram, then get your token from settings."
+    }
+  },
+  "_surf_cli": "Surf CLI generates images and browses the web from your terminal. Installed automatically by the setup script. Free, no account needed.",
+  "_optional_elevenlabs": "Want voice too? ElevenLabs turns posts into audio messages. Add it: { \"type\": \"stdio\", \"command\": \"uvx\", \"args\": [\"elevenlabs-mcp\"], \"env\": { \"ELEVENLABS_API_KEY\": \"your-key-here\" } }. Free tier at elevenlabs.io."
+}
