@@ -3,6 +3,7 @@
 import { useRef } from "react";
 import { motion, useMotionValue, useSpring } from "framer-motion";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
+import { Button } from "@/components/ui/Button";
 
 // Magnetic button component
 function MagneticButton({
@@ -162,6 +163,24 @@ export default function HomePage() {
               </code>{" "}
               in terminal to get started
             </motion.p>
+
+            {/* Button component demo — verifies CLAUDE.md design standards */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.5 }}
+              className="flex flex-wrap items-center gap-3"
+            >
+              <Button variant="primary">Primary</Button>
+              <Button variant="secondary">Secondary</Button>
+              <Button variant="ghost">Ghost</Button>
+              <Button variant="primary" size="sm">
+                Small
+              </Button>
+              <Button variant="primary" size="lg">
+                Large
+              </Button>
+            </motion.div>
           </div>
 
           {/* Right: Visual element */}

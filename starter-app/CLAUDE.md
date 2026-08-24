@@ -239,6 +239,8 @@ src/
 - Use Tailwind CSS utilities
 - Follow spacing scale (4px increments)
 - ONE accent color
+- Always use rounded corners (e.g. `rounded-lg` or `rounded-xl`) on cards, buttons, and inputs
+- Buttons should default to a medium size (e.g. `px-4 py-2` / Tailwind `size="md"` equivalent) unless a specific context calls for small or large
 
 ### Git Commits
 ```
