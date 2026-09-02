@@ -41,6 +41,8 @@ export function MealPlanContainer() {
       console.log('Generating plan with profile:', profile)
       const plan = generateMealPlan(profile, recipes)
       setMealPlan(plan)
+      // Save meal plan to localStorage for grocery list generation
+      localStorage.setItem('currentMealPlan', JSON.stringify(plan))
     } catch (error) {
       console.error('Error generating plan:', error)
     } finally {
