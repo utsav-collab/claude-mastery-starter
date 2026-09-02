@@ -12,6 +12,20 @@ export function MealPlanContainer() {
   const [mealPlan, setMealPlan] = useState(null)
   const [loading, setLoading] = useState(false)
 
+  // Load meal plan from localStorage on mount
+  useEffect(() => {
+    if (isLoaded && user) {
+      try {
+        const stored = localStorage.getItem('currentMealPlan')
+        if (stored) {
+          setMealPlan(JSON.parse(stored))
+        }
+      } catch (error) {
+        console.error('Error loading meal plan:', error)
+      }
+    }
+  }, [isLoaded, user])
+
   if (!isLoaded) return <div className="p-6">Loading...</div>
   if (!user) return <div className="p-6">Please sign in to view your meal plan</div>
 
