@@ -9,6 +9,7 @@ const defaultProfile: DietaryProfile = {
   householdSize: 2,
   dietTags: [],
   excludedIngredients: [],
+  preferredCuisines: [],
 }
 
 export function useDietaryProfile() {

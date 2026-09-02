@@ -1,4 +1,4 @@
-import { MealPlan, Recipe, GroceryListItem, PantryItem } from './types'
+import { MealPlan, Recipe, GroceryListItem, PantryItem, IngredientCategory } from './types'
 
 export function generateGroceryList(
   mealPlan: MealPlan,
@@ -12,7 +12,7 @@ export function generateGroceryList(
   })
 
   // Collect all ingredients from the meal plan
-  const ingredientsNeeded = new Map<string, { quantity: number; unit: string; category: any }>()
+  const ingredientsNeeded = new Map<string, { quantity: number; unit: string; category: IngredientCategory }>()
 
   mealPlan.days.forEach((day) => {
     const recipe = recipes.find((r) => r.id === day.recipeId)

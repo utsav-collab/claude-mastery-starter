@@ -61,11 +61,14 @@ export function GroceryListContainer() {
     const category = prompt('Enter category (produce, protein, dairy, pantry, other):', 'other')
     if (!category) return
 
+    const validCategories = ['produce', 'protein', 'dairy', 'pantry', 'other']
+    const finalCategory = validCategories.includes(category) ? (category as 'produce' | 'protein' | 'dairy' | 'pantry' | 'other') : 'other'
+
     const newItem: GroceryListItem = {
       name,
       quantity: parseFloat(quantity),
       unit,
-      category,
+      category: finalCategory,
     }
 
     setGroceryList([...groceryList, newItem])
@@ -107,7 +110,7 @@ export function GroceryListContainer() {
         </>
       ) : (
         <div className="text-center py-16 text-white/60">
-          <p className="text-lg">Click "Generate from Meal Plan" to create your grocery list</p>
+          <p className="text-lg">Click &quot;Generate from Meal Plan&quot; to create your grocery list</p>
         </div>
       )}
     </div>

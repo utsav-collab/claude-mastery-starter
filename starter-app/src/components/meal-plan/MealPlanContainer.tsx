@@ -5,11 +5,11 @@ import { useState, useEffect } from 'react'
 import { MealPlanView } from './MealPlanView'
 import { generateMealPlan } from '@/lib/mealPlanGenerator'
 import { recipes } from '@/lib/recipes'
-import { DietaryProfile } from '@/lib/types'
+import { DietaryProfile, MealPlan } from '@/lib/types'
 
 export function MealPlanContainer() {
   const { user, isLoaded } = useUser()
-  const [mealPlan, setMealPlan] = useState(null)
+  const [mealPlan, setMealPlan] = useState<MealPlan | null>(null)
   const [loading, setLoading] = useState(false)
 
   // Load meal plan from localStorage on mount
@@ -83,7 +83,7 @@ export function MealPlanContainer() {
         </div>
       ) : (
         <div className="text-center py-16 text-white/60">
-          <p className="text-lg">Click "Generate Plan" to create your weekly meal plan</p>
+          <p className="text-lg">Click &quot;Generate Plan&quot; to create your weekly meal plan</p>
         </div>
       )}
     </div>
