@@ -21,26 +21,13 @@ export function GroceryListContainer() {
   const handleGenerateList = async () => {
     setLoading(true)
     try {
-      // Load the meal plan from localStorage
-      const stored = localStorage.getItem('dietaryProfile')
-      let profile: DietaryProfile = {
-        dietTags: [],
-        excludedIngredients: [],
-        householdSize: 1,
-        preferredCuisines: [],
+      // Load the meal plan from localStorage (could be modified)
+      let storedPlan = localStorage.getItem('mealPlanModifications')
+
+      if (!storedPlan) {
+        storedPlan = localStorage.getItem('currentMealPlan')
       }
 
-      if (stored) {
-        try {
-          const parsed = JSON.parse(stored)
-          profile = { ...profile, ...parsed }
-        } catch {
-          // Continue with default profile
-        }
-      }
-
-      // For now, check if there's a meal plan in localStorage
-      const storedPlan = localStorage.getItem('currentMealPlan')
       if (!storedPlan) {
         alert('Please generate a meal plan first!')
         setLoading(false)
@@ -50,7 +37,7 @@ export function GroceryListContainer() {
       const plan = JSON.parse(storedPlan)
       setMealPlan(plan)
 
-      // Generate the grocery list
+      // Generate the grocery list (will use modified meals if swapped)
       const list = generateGroceryList(plan, recipes, pantryItems)
       setGroceryList(list)
     } catch (error) {
@@ -98,7 +85,7 @@ export function GroceryListContainer() {
             disabled={loading}
             className="px-6 py-2 bg-lime-500 text-black font-semibold rounded-lg hover:bg-lime-600 disabled:opacity-50"
           >
-            {loading ? 'Generating...' : 'Generate from Meal Plan'}
+            {loading ? 'Generating...' : mealPlan ? 'Refresh List' : 'Generate from Meal Plan'}
           </button>
           <button
             onClick={handleAddItem}
