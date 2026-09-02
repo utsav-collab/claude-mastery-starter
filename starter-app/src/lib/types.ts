@@ -6,6 +6,18 @@ export type DietTag =
   | 'nut-free'
   | 'pescatarian'
 
+export type Cuisine =
+  | 'indian'
+  | 'chinese'
+  | 'thai'
+  | 'mexican'
+  | 'italian'
+  | 'japanese'
+  | 'korean'
+  | 'mediterranean'
+  | 'french'
+  | 'american'
+
 export type IngredientCategory =
   | 'produce'
   | 'protein'
@@ -24,6 +36,7 @@ export interface Recipe {
   id: string
   name: string
   tags: DietTag[]
+  cuisine?: Cuisine
   prepTimeMinutes: number
   ingredients: Ingredient[]
   instructions: string[]
@@ -33,6 +46,7 @@ export interface DietaryProfile {
   householdSize: number
   dietTags: DietTag[]
   excludedIngredients: string[]
+  preferredCuisines: Cuisine[]
 }
 
 export interface MealPlanDay {
