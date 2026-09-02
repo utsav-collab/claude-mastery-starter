@@ -3,13 +3,24 @@ import { DietaryProfile, MealPlan, MealPlanDay, Recipe } from './types'
 const DAYS_IN_PLAN = 7
 
 export function matchesProfile(recipe: Recipe, profile: DietaryProfile): boolean {
-  const hasAllDietTags = profile.dietTags.every((tag) => recipe.tags.includes(tag))
+  // Check dietary tags - all specified tags must be present in recipe
+  const hasAllDietTags = profile.dietTags.length === 0 || profile.dietTags.every((tag) => recipe.tags.includes(tag))
+
+  // Check excluded ingredients - recipe must not contain any excluded ingredients
   const hasExcludedIngredient = recipe.ingredients.some((ingredient) =>
     profile.excludedIngredients.some(
-      (excluded) => ingredient.name.toLowerCase() === excluded.toLowerCase()
+      (excluded) => ingredient.name.toLowerCase().includes(excluded.toLowerCase()) ||
+                    excluded.toLowerCase().includes(ingredient.name.toLowerCase())
     )
   )
-  return hasAllDietTags && !hasExcludedIngredient
+
+  // Check cuisine preferences - if preferences specified AND recipe has cuisine, it must match
+  // If recipe has no cuisine data, it's still available (we're building out the database)
+  const cuisineMatches = profile.preferredCuisines.length === 0 ||
+                        !recipe.cuisine ||
+                        profile.preferredCuisines.includes(recipe.cuisine)
+
+  return hasAllDietTags && !hasExcludedIngredient && cuisineMatches
 }
 
 function shuffle<T>(items: T[]): T[] {

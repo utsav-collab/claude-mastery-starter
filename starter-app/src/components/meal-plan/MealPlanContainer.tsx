@@ -1,7 +1,7 @@
 'use client'
 
 import { useUser } from '@clerk/nextjs'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { MealPlanView } from './MealPlanView'
 import { generateMealPlan } from '@/lib/mealPlanGenerator'
 import { recipes } from '@/lib/recipes'
@@ -20,11 +20,26 @@ export function MealPlanContainer() {
   const handleGeneratePlan = async () => {
     setLoading(true)
     try {
-      const defaultProfile: DietaryProfile = {
+      // Load saved preferences from localStorage
+      let profile: DietaryProfile = {
         dietTags: [],
         excludedIngredients: [],
+        householdSize: 1,
+        preferredCuisines: [],
       }
-      const plan = generateMealPlan(defaultProfile, recipes)
+
+      try {
+        const stored = localStorage.getItem('dietaryProfile')
+        if (stored) {
+          const parsed = JSON.parse(stored)
+          profile = { ...profile, ...parsed }
+        }
+      } catch (error) {
+        console.error('Error loading preferences:', error)
+      }
+
+      console.log('Generating plan with profile:', profile)
+      const plan = generateMealPlan(profile, recipes)
       setMealPlan(plan)
     } catch (error) {
       console.error('Error generating plan:', error)
