@@ -1,5 +1,8 @@
+'use client'
+
 import { MealPlan, Recipe } from '@/lib/types'
 import { RecipeCard } from './RecipeCard'
+import { useMealHistory } from '@/hooks/useMealHistory'
 
 interface MealPlanViewProps {
   plan: MealPlan
@@ -8,6 +11,11 @@ interface MealPlanViewProps {
 
 export function MealPlanView({ plan, recipes }: MealPlanViewProps) {
   const recipeById = new Map(recipes.map((recipe) => [recipe.id, recipe]))
+  const { isMealCooked, markMealAsCooked } = useMealHistory()
+
+  const handleMarkCooked = (recipeName: string, recipeId: string, dayIndex: number) => {
+    markMealAsCooked(recipeId, recipeName, dayIndex)
+  }
 
   return (
     <div className="space-y-4">
@@ -20,7 +28,15 @@ export function MealPlanView({ plan, recipes }: MealPlanViewProps) {
         {plan.days.map((day) => {
           const recipe = recipeById.get(day.recipeId)
           if (!recipe) return null
-          return <RecipeCard key={day.dayIndex} dayIndex={day.dayIndex} recipe={recipe} />
+          return (
+            <RecipeCard
+              key={day.dayIndex}
+              dayIndex={day.dayIndex}
+              recipe={recipe}
+              isCooked={isMealCooked(day.recipeId)}
+              onMarkCooked={() => handleMarkCooked(recipe.name, recipe.id, day.dayIndex)}
+            />
+          )
         })}
       </div>
     </div>

@@ -17,6 +17,9 @@ export default function AppPage() {
             <Link href="/grocery" className="px-4 py-2 bg-white/10 hover:bg-white/20 rounded-lg transition-colors">
               Grocery List
             </Link>
+            <Link href="/history" className="px-4 py-2 bg-white/10 hover:bg-white/20 rounded-lg transition-colors">
+              History
+            </Link>
             <Link href="/settings" className="px-4 py-2 bg-white/10 hover:bg-white/20 rounded-lg transition-colors">
               Settings
             </Link>
